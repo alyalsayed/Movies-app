@@ -1,13 +1,14 @@
 import React from 'react';
 import { Movie } from '../types/movie';
+import FavoriteActions from './FavoriteActions';
 
 interface MovieCardProps {
   movie: Movie;
-  onAddFavorite?: () => void;
-  onDelete?: () => void;
+  favorites: Movie[];
+  setFavorites: React.Dispatch<React.SetStateAction<Movie[]>>;
 }
 
-const MovieCard: React.FC<MovieCardProps> = ({ movie, onAddFavorite, onDelete }) => {
+const MovieCard: React.FC<MovieCardProps> = ({ movie, favorites, setFavorites }) => {
   return (
     <div className="bg-white shadow-lg rounded-lg overflow-hidden">
       <img
@@ -19,22 +20,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, onAddFavorite, onDelete })
         <h3 className="font-bold text-lg">{movie.Title}</h3>
         <p className="text-gray-600">{movie.Year}</p>
         <div className="mt-2 space-x-2">
-          {onAddFavorite && (
-            <button
-              onClick={onAddFavorite}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              Add to Favorites
-            </button>
-          )}
-          {onDelete && (
-            <button
-              onClick={onDelete}
-              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-            >
-              Delete
-            </button>
-          )}
+          <FavoriteActions movie={movie} favorites={favorites} setFavorites={setFavorites} />
         </div>
       </div>
     </div>
