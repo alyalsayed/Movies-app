@@ -1,28 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 interface SearchBarProps {
-  onSearch: (query: string) => void;
+  query: string;
+  setQuery: (query: string) => void;
+  onSearch: () => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
-  const [query, setQuery] = useState('');
-
-  const handleSearch = () => {
-    onSearch(query);
-  };
-
+const SearchBar: React.FC<SearchBarProps> = ({ query, setQuery, onSearch }) => {
   return (
-    <div className="flex gap-2 mb-4">
+    <div className="flex items-center">
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search for a movie"
-        className="flex-1 p-2 border border-gray-300 rounded"
+        placeholder="Search for movies..."
+        className="flex-grow p-2 border border-gray-300 rounded-l"
       />
       <button
-        onClick={handleSearch}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        onClick={onSearch}
+        className="bg-blue-500 text-white p-2 rounded-r"
       >
         Search
       </button>
