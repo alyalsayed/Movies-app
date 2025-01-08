@@ -3,15 +3,15 @@ import { IsString, IsNotEmpty } from 'class-validator';
 export class CreateFavoriteDto {
   @IsString()
   @IsNotEmpty()
-  title: string;
+  Title: string;
 
   @IsString()
   @IsNotEmpty()
-  year: string;
+  Year: string;
 
   @IsString()
   @IsNotEmpty()
-  poster: string;
+  Poster: string;
 
   @IsString()
   @IsNotEmpty()

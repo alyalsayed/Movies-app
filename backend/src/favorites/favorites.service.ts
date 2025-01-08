@@ -14,66 +14,64 @@ import {
     constructor(private prisma: PrismaService) {}
   
     async create(createFavoriteDto: CreateFavoriteDto) {
-      try {
-        const existingFavorite = await this.prisma.favoriteMovie.findUnique({
-          where: { imdbID: createFavoriteDto.imdbID },
-        });
-  
-        if (existingFavorite) {
-          throw new ConflictException({
-            statusCode: 409,
-            message: `Movie with IMDb ID ${createFavoriteDto.imdbID} already exists in favorites.`,
+        try {
+          const existingFavorite = await this.prisma.favoriteMovie.findUnique({
+            where: { imdbID: createFavoriteDto.imdbID },
+          });
+      
+          if (existingFavorite) {
+            return {
+              statusCode: 200,
+              message: `Movie with IMDb ID ${createFavoriteDto.imdbID} already exists in favorites.`,
+            };
+          }
+      
+          const favorite = await this.prisma.favoriteMovie.create({
+            data: createFavoriteDto,
+          });
+      
+          return {
+            statusCode: 201,
+            message: 'Favorite movie added successfully.',
+            data: favorite,
+          };
+        } catch (error) {
+          throw new InternalServerErrorException({
+            statusCode: 500,
+            message: 'Failed to create favorite movie. Please try again later.',
           });
         }
+      }
+      
+      
   
-        const favorite = await this.prisma.favoriteMovie.create({
-          data: createFavoriteDto,
-        });
-  
-        return {
-          statusCode: 201,
-          message: 'Favorite movie added successfully.',
-          data: favorite,
-        };
-      } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          if (error.code === 'P2002') {
-            throw new ConflictException({
-              statusCode: 409,
-              message: `A favorite movie with the same IMDb ID already exists.`,
+      async findAll() {
+        try {
+          const favorites = await this.prisma.favoriteMovie.findMany();
+          if (favorites.length === 0) {
+            throw new NotFoundException({
+              statusCode: 404,
+              message: 'No favorite movies found.',
             });
           }
-        }
-        throw new InternalServerErrorException({
-          statusCode: 500,
-          message: 'Failed to create favorite movie. Please try again later.',
-        });
-      }
-    }
-  
-    async findAll() {
-      try {
-        const favorites = await this.prisma.favoriteMovie.findMany();
-        if (favorites.length === 0) {
-          throw new NotFoundException({
-            statusCode: 404,
-            message: 'No favorite movies found.',
+    
+          return {
+            statusCode: 200,
+            message: 'Favorite movies fetched successfully.',
+            data: favorites,
+          };
+        } catch (error) {
+          if (error instanceof NotFoundException) {
+            throw error; 
+          }
+    
+          throw new InternalServerErrorException({
+            statusCode: 500,
+            message: 'Failed to fetch favorite movies. Please try again later.',
           });
         }
-  
-        return {
-          statusCode: 200,
-          message: 'Favorite movies fetched successfully.',
-          data: favorites,
-        };
-      } catch (error) {
-        throw new InternalServerErrorException({
-          statusCode: 500,
-          message: 'Failed to fetch favorite movies. Please try again later.',
-        });
       }
-    }
-  
+    
     async findOne(id: string) {
       try {
         const favorite = await this.prisma.favoriteMovie.findUnique({
@@ -138,7 +136,7 @@ import {
     async remove(id: string) {
       try {
         const existingFavorite = await this.prisma.favoriteMovie.findUnique({
-          where: { id },
+          where: {imdbID: id },
         });
         if (!existingFavorite) {
           throw new NotFoundException({
@@ -147,7 +145,7 @@ import {
           });
         }
   
-        await this.prisma.favoriteMovie.delete({ where: { id } });
+        await this.prisma.favoriteMovie.delete({ where: { imdbID: id } });
   
         return {
           statusCode: 200,
