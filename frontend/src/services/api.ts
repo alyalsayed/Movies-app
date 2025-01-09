@@ -20,7 +20,7 @@ export const searchMovies = async (query: string, page: number = 1): Promise<{ m
 export const getFavorites = async (): Promise<Movie[]> => {
   try {
     const response = await axios.get(`${apiUrl}/favorites`);
-    return response.data;
+    return response.data.data;
   } catch (error) {
     throw new Error('Failed to fetch favorites');
   }

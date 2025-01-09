@@ -16,7 +16,8 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const fetchFavorites = async () => {
       try {
         const result = await getFavorites();
-        setFavorites(result.data || []);
+
+        setFavorites( result || []);
       } catch (err) {
         console.error("Failed to fetch favorites", err);
       }

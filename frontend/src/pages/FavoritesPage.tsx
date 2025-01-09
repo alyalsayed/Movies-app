@@ -6,7 +6,7 @@ import { useFavorites } from '../context/FavoritesContext';
 const FavoritesPage: React.FC = () => {
   const { favorites, setFavorites } = useFavorites();
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error] = useState<string | null>(null);
 
   useEffect(() => {
     setLoading(false);

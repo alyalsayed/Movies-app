@@ -13,11 +13,9 @@ const SearchPage: React.FC = () => {
     query,
     setQuery,
     currentPage,
-    setCurrentPage,
     searchResults,
     isLoading,
     isError,
-    isSuccess,
     handleSearch,
   } = useSearch();
   const { favorites, setFavorites } = useFavorites();
@@ -35,7 +33,7 @@ const SearchPage: React.FC = () => {
       ) : (
         <MovieList movies={searchResults?.movies || []} favorites={favorites} setFavorites={setFavorites} />
       )}
-      {searchResults?.totalResults > 0 && (
+      {(searchResults?.totalResults || 0) > 0 && (
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handleSearch} />
       )}
     </div>
